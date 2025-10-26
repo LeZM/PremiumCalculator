@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gold & Silver Premium Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.4em;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Premium Calculator</h1>
+
+  <label for="price">Total Price (€ or $):</label>
+  <input type="number" id="price" step="0.01">
+
+  <label for="spot">Spot Price per oz:</label>
+  <input type="number" id="spot" step="0.01">
+
+  <label for="weight">Weight:</label>
+  <input type="number" id="weight" step="0.001">
+
+  <label for="kind">Weight Unit:</label>
+  <select id="kind">
+    <option value="ounces">Ounces (oz)</option>
+    <option value="grammes">Grammes (g)</option>
+  </select>
+
+  <label for="purity">Purity:</label>
+  <select id="purity">
+    <option value="0.9999">999.9 ‰</option>
+    <option value="0.999">999 ‰</option>
+    <option value="0.917">917 ‰ (22k)</option>
+    <option value="0.900">900 ‰</option>
+    <option value="0.835">835 ‰</option>
+    <option value="0.680">680 ‰</option>
+  </select>
+
+  <button onclick="calculatePremium()">Calculate Premium</button>
+
+  <div id="result"></div>
+
+  <script>
+    function calculatePremium() {
+      const price = parseFloat(document.getElementById('price').value);
+      const spot = parseFloat(document.getElementById('spot').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+      const kind = document.getElementById('kind').value;
+      const purity = parseFloat(document.getElementById('purity').value);
+
+      if (isNaN(price) || isNaN(spot) || isNaN(weight) || isNaN(purity)) {
+        document.getElementById('result').textContent = 'Please fill in all fields correctly.';
+        return;
+      }
+
+      let actualWeightOz;
+      if (kind === 'grammes') {
+        actualWeightOz = (weight * purity) * 0.0321507;
+      } else {
+        actualWeightOz = weight * purity;
+      }
+
+      const premium = (((price / actualWeightOz) - spot) / spot) * 100;
+      document.getElementById('result').textContent = `Premium: ${premium.toFixed(2)}%`;
+    }
+  </script>
+
+</body>
+</html>
